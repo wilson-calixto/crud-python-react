@@ -1,3 +1,0 @@
-
-ajustar o auth
-testar as migrations

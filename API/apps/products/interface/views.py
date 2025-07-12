@@ -15,8 +15,9 @@ from apps.products.infrastructure.filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 
- 
+@csrf_protect
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def list_products(request):
     queryset = Product.objects.filter(is_active=True)
     filterset = ProductFilter(request.GET, queryset=queryset)
@@ -52,8 +53,14 @@ def create_product(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+@extend_schema(
+    operation_id="detalhar_produto",
+    responses={200: ProductSerializer},
+    summary="Detalha um produto",
+    description="Retorna as informações completas de um único produto pelo ID."
+)
 @csrf_protect
-@checar_plano_ativo
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def retrieve_product(request, pk):
@@ -98,10 +105,12 @@ def delete_product(request, pk):
     product.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
 urlpatterns = [
     path('products/', list_products),
     path('products/create', create_product),
     path('products/<int:pk>/', retrieve_product),
     path('products/update/<int:pk>/', update_product),
-    path('products/<int:pk>/', delete_product),
+    path('products/delete/<int:pk>/', delete_product),
 ]
