@@ -2,4 +2,4 @@
 ajustar o auth v
 testar as migrations v
 revisar numero magicos V
-paginator no swagger
+paginator no swagger 

@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema, OpenApiExample
+from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiParameter
 from django.urls import path
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_GET
@@ -15,6 +15,21 @@ from apps.products.infrastructure.filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 
+ 
+@extend_schema(
+    operation_id="listar_produtos",
+    summary="Listar produtos",
+    description="Lista produtos ativos com suporte a filtros e paginação.",
+    parameters=[
+        OpenApiParameter(name='page', description='Número da página', required=False, type=int),
+        OpenApiParameter(name='page_size', description='Quantidade de itens por página', required=False, type=int),
+        OpenApiParameter(name='name', description='Busca por nome (parcial)', required=False, type=str),
+        OpenApiParameter(name='min_price', description='Preço mínimo', required=False, type=float),
+        OpenApiParameter(name='max_price', description='Preço máximo', required=False, type=float),
+        OpenApiParameter(name='is_active', description='Filtrar por ativo/inativo', required=False, type=bool),
+    ],
+    responses={200: ProductSerializer(many=True)}
+)
 @csrf_protect
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -22,11 +37,10 @@ def list_products(request):
     queryset = Product.objects.filter(is_active=True)
     filterset = ProductFilter(request.GET, queryset=queryset)
     paginator = PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = request.GET.get('page_size', 10)
     result_page = paginator.paginate_queryset(filterset.qs, request)
     serializer = ProductSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
-
  
 @extend_schema(
     request=ProductSerializer,
