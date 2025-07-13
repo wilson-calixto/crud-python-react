@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Table, Skeleton, Alert, Button, Row } from 'antd';
+import { Table, Skeleton, Alert, Button, Row, Flex } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import CreateProductModal from './components/CreateProductModal/CreateProductModal';
 import useRequestedOrdersTab from './hooks/useCreateAndEditProduct';
@@ -70,7 +70,7 @@ function Products() {
 
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: 24, marginTop:'50px' }}>
         <CreateProductModal
         isOpen={openCreateNewOrder}
         onCancel={handleCancelCreateNewOrder}
@@ -78,6 +78,7 @@ function Products() {
         loading={isLoadingCreateRequestOrder}        
       />
 
+      <Flex vertical justify='center' >
       <Row
       align={'middle'}
       justify={'space-between'}
@@ -93,6 +94,7 @@ function Products() {
 
        <Table columns={columns} dataSource={data} rowKey="id" pagination={{ pageSize: 5 }} />
       {/* <Counter /> */}
+      </Flex>
     </div>
   );
 }
