@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_GET
 from django.views.decorators.csrf import csrf_protect
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+# from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
@@ -32,7 +32,7 @@ from rest_framework.pagination import PageNumberPagination
 )
 @csrf_protect
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def list_products(request):
     queryset = Product.objects.filter(is_active=True)
     filterset = ProductFilter(request.GET, queryset=queryset)
@@ -76,7 +76,7 @@ def create_product(request):
 )
 @csrf_protect
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def retrieve_product(request, pk):
     product = get_object_or_404(Product, pk=pk, is_active=True)
     serializer = ProductSerializer(product)
@@ -113,7 +113,7 @@ def update_product(request, pk):
 @csrf_protect
 @checar_plano_ativo
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def delete_product(request, pk):
     product = get_object_or_404(Product, pk=pk, is_active=True)
     product.delete()
