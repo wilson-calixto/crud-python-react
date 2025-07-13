@@ -5,11 +5,11 @@ const useNewOrderSchema = () => {
   return yup.object({
     name: yup.string().required("campo obrigatório"),
     description: yup.string().required("campo obrigatório"),
-    qty: yup
+    stock: yup
       .number()
       .min(1, 'valor mínino do campo')
       .required("campo obrigatório"),
-    amount: yup
+    price: yup
       .number()
       .min(0.01, 'valor mínino do campo')
       .required("campo obrigatório"),

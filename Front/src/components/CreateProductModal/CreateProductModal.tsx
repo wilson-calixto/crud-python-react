@@ -1,14 +1,13 @@
 import { Divider, Input, InputNumber} from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { CustomFormItem } from './styles';
-// import { AutoCompleteIcon } from 'src/modules/RepairModule/RepairAPModule/components/SymptomRegister/styles';
 import { Content } from 'antd/es/layout/layout';
 import { yupResolver } from '@hookform/resolvers/yup';
- import useNewOrderModalSchema from './useNewOrderSchema';
+import useNewOrderModalSchema from './useNewOrderSchema';
 import  { Modal as AntModal } from 'antd';
- import type { INewOrderForm } from '../../api/resources/products/IProduct';
- 
- 
+import type { INewOrderForm } from '../../api/resources/products/IProduct';
+
+
 
 export interface INewOrderModalData extends INewOrderForm {
   description: string;
@@ -37,8 +36,9 @@ const CreateProductModal: React.FC<INewOrderModalProps> = ({
     defaultValues: {
       name: 'Teclado Mecânico',
       description: 'Teclado com switches azuis e RGB',
-      qty: 10,
-      amount: 349.9,
+      stock: 10,
+      price: 349.9,
+      is_active:true,
     },
     resolver: yupResolver(useNewOrderModalSchema()),
     reValidateMode: 'onChange',
@@ -118,13 +118,13 @@ const CreateProductModal: React.FC<INewOrderModalProps> = ({
 
 <Controller
   control={control}
-  name="amount"
+  name="price"
   render={({ field: { onChange, value } }) => (
     <CustomFormItem
       label="Valor (R$)"
       required
-      validateStatus={formErrors.amount ? 'error' : undefined}
-      help={formErrors.amount?.message}
+      validateStatus={formErrors.price ? 'error' : undefined}
+      help={formErrors.price?.message}
       labelCol={{ span: 24 }}
     >
       <InputNumber

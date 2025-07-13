@@ -3,27 +3,11 @@ import { appAxios } from "../../axios";
 import type { INewOrderForm } from "./IProduct";
 
 export const URL = {
-  registryRepairAnalysis: () => `api/products`,
   getRequestOrdersData: () => `api/products`,
-  createProduct: () => `api/products`,
+  createProduct: () => `api/products/create`,
 };
 
-export const registryRepairAnalysis = (
-  data: INewOrderForm,
-  axiosRequestConfig?: AxiosRequestConfig
-) => {
-  const { signal, abort } = new AbortController();
-  const response = appAxios
-    .post<string>(URL.registryRepairAnalysis(), data, {
-      ...axiosRequestConfig,
-      signal: axiosRequestConfig?.signal || signal,
-    })
-    .then((response) => response);
-  return {
-    response,
-    abort,
-  };
-};
+ 
 
 export const getRequestOrdersData = (
   axiosRequestConfig?: AxiosRequestConfig

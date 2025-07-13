@@ -1,6 +1,7 @@
 export interface INewOrderForm {
   name: string;
   description: string;
-  qty: number;
-  amount: number;
+  stock: number;
+  price: number;
+  is_active:boolean;
 }

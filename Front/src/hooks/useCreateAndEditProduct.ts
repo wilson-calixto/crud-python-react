@@ -5,16 +5,11 @@ import { API } from "../api";
 
 import type { INewOrderForm } from "../api/resources/products/IProduct";
 import useAxiosErrorHandler from "./useAxiosErrorHandler";
-import { useToastFactory } from "./useToastFactory";
 
 const useRequestedOrdersTab = () => {
   const [openCreateNewOrder, setOpenCreateNewOrder] = useState<boolean>(false);
-  const { onError } = useAxiosErrorHandler();
+  // const { onError } = useAxiosErrorHandler();
 
-  const successToast = useToastFactory({
-    toastType: "success",
-    message: "",
-  });
 
   const {
     data: dataRequestOrdersTable,
@@ -31,20 +26,17 @@ const useRequestedOrdersTab = () => {
       mutationFn: (newOrder: INewOrderForm) =>
         API.Products.createProduct(newOrder).response,
       onSuccess() {
+ 
         // successToast({
-        //   description: translate({
-        //     id: "repair.request.save.success",
-        //   }),
+        //   message: "Sucesso!",
+        //   description: "Produto criado com sucesso!",
         // });
-        successToast({
-          message: "Sucesso!",
-          description: "Produto criado com sucesso!",
-        });
 
         refetch();
       },
       onError(error) {
-        onError(error);
+        
+        // onError(error);
       },
     });
 
