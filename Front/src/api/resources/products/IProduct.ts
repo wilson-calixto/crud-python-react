@@ -1,4 +1,5 @@
-export interface INewOrderForm {
+export interface INewProductForm {
+  id?: number;
   name: string;
   description: string;
   stock: number;
@@ -12,6 +13,7 @@ export interface Product {
   description: string;
   stock: number;
   price: string;
+  is_active?:boolean;
 }
 
 export interface PaginatedResponse<T> {

@@ -5,7 +5,7 @@ import { Content } from 'antd/es/layout/layout';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useNewProductModalSchema from './useProductsSchema';
 import  { Modal as AntModal } from 'antd';
-import type { INewProductForm } from '../../api/resources/products/IProduct';
+import type { INewProductForm, Product } from '../../api/resources/products/IProduct';
 
 
 
@@ -18,15 +18,17 @@ interface INewProductModalProps {
   onConfirm: (data: INewProductForm) => void;
   onCancel: () => void;
   loading: boolean;
+  product?:Product;
  }
 
-const CreateProductModal: React.FC<INewProductModalProps> = ({
+const EditProductModal: React.FC<INewProductModalProps> = ({
   onCancel,
   onConfirm,
   isOpen,
-  loading 
+  loading,
+  product
 }) => {
- 
+ console.log('product', product)
   const {
     control,
     handleSubmit,
@@ -34,11 +36,11 @@ const CreateProductModal: React.FC<INewProductModalProps> = ({
     formState: { errors: formErrors },
   } = useForm<INewProductForm>({
     defaultValues: {
-      name: 'Teclado Mecânico',
-      description: 'Teclado com switches azuis e RGB',
-      stock: 10,
-      price: 349.9,
-      is_active:true,
+      name: product?.name||'',
+      description: product?.description||'',
+      stock: product?.stock||1,
+      price: product?.price ? parseFloat(product.price):1,
+      is_active:product?.is_active||true,
     },
     resolver: yupResolver(useNewProductModalSchema()),
     reValidateMode: 'onChange',
@@ -62,7 +64,7 @@ const CreateProductModal: React.FC<INewProductModalProps> = ({
 
   return (
     <AntModal
-      title={'Criar novo produto'}
+      title={'Editar produto'}
       onOk={handleSubmit(handleSub)}
       onCancel={onCancel}
       open={isOpen}
@@ -75,7 +77,7 @@ const CreateProductModal: React.FC<INewProductModalProps> = ({
       confirmLoading={loading}
       focusTriggerAfterClose={false}
       maskClosable={false}
-      okText={'Criar'}
+      okText={'Salvar'}
     >
  
       <Content
@@ -173,4 +175,4 @@ const CreateProductModal: React.FC<INewProductModalProps> = ({
   );
 };
 
-export default CreateProductModal;
+export default EditProductModal;

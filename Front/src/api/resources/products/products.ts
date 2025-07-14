@@ -1,10 +1,11 @@
 import type { AxiosRequestConfig } from "axios";
 import { appAxios } from "../../axios";
-import type { INewOrderForm, PaginatedResponse, Product } from "./IProduct";
+import type { INewProductForm, PaginatedResponse, Product } from "./IProduct";
 
 export const URL = {
   getProductsData: () => `api/products`,
   createProduct: () => `api/products/create`,
+  editProduct: (id:number) => `api/products/update/${id}/`,
 };
 
  
@@ -27,13 +28,34 @@ export const getProductsData = (
  
 
 export const createProduct = (
-  newOrder: INewOrderForm,
+  NewProduct: INewProductForm,
   axiosRequestConfig?: AxiosRequestConfig
 ) => {
   const { signal, abort } = new AbortController();
 
   const response = appAxios
-    .post<INewOrderForm>(URL.createProduct(), newOrder, {
+    .post<INewProductForm>(URL.createProduct(), NewProduct, {
+      signal: axiosRequestConfig?.signal || signal,
+      ...axiosRequestConfig,
+    })
+    .then((response) => response.data);
+
+  return {
+    response,
+    abort,
+  };
+};
+
+
+export const editProduct = (
+  id:number,
+  NewProduct: INewProductForm,
+  axiosRequestConfig?: AxiosRequestConfig
+) => {
+  const { signal, abort } = new AbortController();
+
+  const response = appAxios
+    .put<INewProductForm>(URL.editProduct(id), NewProduct, {
       signal: axiosRequestConfig?.signal || signal,
       ...axiosRequestConfig,
     })

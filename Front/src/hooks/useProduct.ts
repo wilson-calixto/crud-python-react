@@ -3,14 +3,21 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { API } from "../api";
 
-import type { INewOrderForm } from "../api/resources/products/IProduct";
+import type { INewProductForm, Product } from "../api/resources/products/IProduct";
 import type { NotificationInstance } from "antd/es/notification/interface";
  
 const useProduct = (api:NotificationInstance) => {
-  const [openCreateNewOrder, setOpenCreateNewOrder] = useState<boolean>(false);
-  // const { onError } = useAxiosErrorHandler();
+  const [openCreateNewProduct, setOpenCreateNewProduct] = useState<boolean>(false);
+ 
 
-  
+  const [openEditProduct, setOpenEditProduct] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product|undefined>();
+
+
+const showEditOrderModal = (row: Product) => {
+    setOpenEditProduct(true);
+    setSelectedProduct(row);
+};
   
 
   const {
@@ -25,26 +32,65 @@ const useProduct = (api:NotificationInstance) => {
 
   const { mutateAsync: createProduct, isPending: isLoadingCreateProduct } =
     useMutation({
-      mutationFn: (newOrder: INewOrderForm) =>
-        API.Products.createProduct(newOrder).response,
+      mutationFn: (NewProduct: INewProductForm) =>
+        API.Products.createProduct(NewProduct).response,
       onError() {
         api['error']({
           message: 'Error',
           description:
             'Erro ao criar produto.',
         });
-        handleCloseCreateNewOrder();
+        handleCloseCreateNewProduct();
         },
     });
 
-  const handleCloseCreateNewOrder = () => {
-    setOpenCreateNewOrder(false);
-  };
-    const handleOpenCreateNewOrder = () => {
-    setOpenCreateNewOrder(true);
+  const { mutateAsync: editProduct } =
+    useMutation({
+      mutationFn: (NewProduct: INewProductForm) =>
+        API.Products.editProduct(NewProduct?.id, NewProduct).response,
+      onError() {
+        api['error']({
+          message: 'Error',
+          description:
+            'Erro ao criar produto.',
+        });
+        handleCloseEditProduct();
+        },
+    });
+
+
+    
+  const handleCloseCreateNewProduct = () => {
+    setOpenCreateNewProduct(false);
   };
 
-  const confirmCreateNewOrder = async (data: INewOrderForm) => {
+  const handleCloseEditProduct = () => {
+    setSelectedProduct(undefined);
+    setOpenEditProduct(false);
+  };
+
+  const handleOpenCreateNewProduct = () => {  
+    setOpenCreateNewProduct(true);
+  };
+
+    const confirmEditProduct = async (data: INewProductForm) => {
+    try {
+       await editProduct(id,data);
+        api['success']({
+          message: 'Sucesso',
+          description:
+            'Produto criado com sucesso.',
+        });
+        handleCloseEditProduct();
+        refetch();
+        
+        
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
+  const confirmCreateNewProduct = async (data: INewProductForm) => {
     try {
        await createProduct(data);
         api['success']({
@@ -52,7 +98,7 @@ const useProduct = (api:NotificationInstance) => {
           description:
             'Produto criado com sucesso.',
         });
-        handleCloseCreateNewOrder();
+        handleCloseCreateNewProduct();
         refetch();
         
         
@@ -64,11 +110,17 @@ const useProduct = (api:NotificationInstance) => {
   return {
     isLoadingProductsTable,
     dataAllProductsTable,
-    openCreateNewOrder,
-    handleCloseCreateNewOrder,
-    handleOpenCreateNewOrder,
-    confirmCreateNewOrder,
+    openCreateNewProduct,
+    handleCloseCreateNewProduct,
+    handleCloseEditProduct,
+    handleOpenCreateNewProduct,
+    confirmCreateNewProduct,
+    confirmEditProduct,
     isLoadingCreateProduct,
+    selectedProduct,
+    setSelectedProduct,
+    showEditOrderModal,
+    openEditProduct,
   };
 };
 

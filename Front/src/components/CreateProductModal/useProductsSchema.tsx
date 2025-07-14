@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const useNewOrderSchema = () => {
+const useProductsSchema = () => {
  
   return yup.object({
     name: yup.string().required("campo obrigatório"),
@@ -18,4 +18,4 @@ const useNewOrderSchema = () => {
 };
 
 
-export default useNewOrderSchema;
+export default useProductsSchema;

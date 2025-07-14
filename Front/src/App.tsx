@@ -3,9 +3,31 @@ import type { ColumnsType } from 'antd/es/table';
 import CreateProductModal from './components/CreateProductModal/CreateProductModal';
 import useProduct from './hooks/useProduct';
 import type { Product } from './api/resources/products/IProduct';
+import EditProductModal from './components/EditProductModal/EditProductModal';
 
- 
- 
+
+
+
+function Products() {
+  const [api, contextHolder] = notification.useNotification();
+  const {
+    openEditProduct,
+    openCreateNewProduct,
+    selectedProduct,
+    handleCloseCreateNewProduct,
+    handleCloseEditProduct,
+    handleOpenCreateNewProduct,
+    confirmCreateNewProduct,
+    confirmEditProduct,
+    isLoadingCreateProduct,
+    isLoadingProductsTable,
+    dataAllProductsTable,   
+    showEditOrderModal 
+    } = useProduct(api);
+
+
+
+
 const columns: ColumnsType<Product> = [
   {
     title: 'ID',
@@ -31,57 +53,53 @@ const columns: ColumnsType<Product> = [
     title: 'Preço',
     dataIndex: 'price',
     key: 'price',
-   },
+  },
+  {
+    title: 'Ações',
+    dataIndex: '',
+    key: 'x',   
+    render: (row) => <a onClick={() =>
+       showEditOrderModal(row)}>Edit</a>,
+  },
 ];
- 
-function Products() {
-  const [api, contextHolder] = notification.useNotification();
-
- 
-
-  
-  const {
-    openCreateNewOrder,
-    handleCloseCreateNewOrder,
-    handleOpenCreateNewOrder,
-    confirmCreateNewOrder, 
-    isLoadingCreateProduct,
-    isLoadingProductsTable,
-    dataAllProductsTable
-   } = useProduct(api);
-
 
   if (isLoadingProductsTable) return <Skeleton active />;
- 
- 
+
 
   return (
-    <div style={{ padding: 24, marginTop:'50px' }}>
-            {contextHolder}
+    <div style={{ padding: 24, marginTop: '50px' }}>
+      {contextHolder}
 
- 
-        <CreateProductModal
-        isOpen={openCreateNewOrder}
-        onCancel={handleCloseCreateNewOrder}
-        onConfirm={confirmCreateNewOrder}
-        loading={isLoadingCreateProduct}        
+    {selectedProduct &&
+      <EditProductModal
+        isOpen={openEditProduct}
+        onCancel={handleCloseEditProduct}
+        onConfirm={confirmEditProduct}
+        loading={isLoadingCreateProduct}
+        product={selectedProduct}
+      />
+    }
+
+      <CreateProductModal
+        isOpen={openCreateNewProduct}
+        onCancel={handleCloseCreateNewProduct}
+        onConfirm={confirmCreateNewProduct}
+        loading={isLoadingCreateProduct}
       />
 
       <Flex vertical justify='center' >
-      <Row
-      align={'middle'}
-      justify={'space-between'}
-      >
+        <Row
+          align={'middle'}
+          justify={'space-between'}
+        >
+          <h1>Produtos</h1>
+          <Button
+            onClick={handleOpenCreateNewProduct}
+            type='primary'
+          >Criar produto</Button>
+        </Row>
 
-      
-      <h1>Produtos</h1>
-      <Button
-       onClick={handleOpenCreateNewOrder}
-       type='primary'
-       >Criar produto</Button>
-       </Row>
-
-       <Table loading={isLoadingProductsTable} columns={columns} dataSource={dataAllProductsTable} rowKey="id" pagination={{ pageSize: 5 }} />
+        <Table loading={isLoadingProductsTable} columns={columns} dataSource={dataAllProductsTable} rowKey="id" pagination={{ pageSize: 5 }} />
       </Flex>
     </div>
   );
