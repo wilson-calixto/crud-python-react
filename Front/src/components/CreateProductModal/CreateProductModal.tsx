@@ -81,7 +81,7 @@ const CreateProductModal: React.FC<INewOrderModalProps> = ({
  
       <Content
         style={{
-          padding: '1.5rem',
+          padding: '0.5rem',
         }}
       >
         <Controller
@@ -116,6 +116,28 @@ const CreateProductModal: React.FC<INewOrderModalProps> = ({
   )}
 />
 
+
+<Controller
+  control={control}
+  name="stock"
+  render={({ field: { onChange, value } }) => (
+    <CustomFormItem
+      label="Quantidade em estoque"
+      required
+      validateStatus={formErrors.stock ? 'error' : undefined}
+      help={formErrors.stock?.message}
+      labelCol={{ span: 24 }}
+    >
+      <InputNumber
+        min={1}
+        style={{ width: '100%' }}
+        value={value}
+        onChange={(v) => v && onChange(v)}
+       />
+    </CustomFormItem>
+  )}
+/>
+
 <Controller
   control={control}
   name="price"
@@ -138,6 +160,8 @@ const CreateProductModal: React.FC<INewOrderModalProps> = ({
     </CustomFormItem>
   )}
 />
+
+
 
 
       </Content>
