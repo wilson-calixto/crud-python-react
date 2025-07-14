@@ -1,29 +1,30 @@
 import type { AxiosRequestConfig } from "axios";
 import { appAxios } from "../../axios";
-import type { INewOrderForm } from "./IProduct";
+import type { INewOrderForm, PaginatedResponse, Product } from "./IProduct";
 
 export const URL = {
-  getRequestOrdersData: () => `api/products`,
+  getProductsData: () => `api/products`,
   createProduct: () => `api/products/create`,
 };
 
  
 
-export const getRequestOrdersData = (
+export const getProductsData = (
   axiosRequestConfig?: AxiosRequestConfig
 ) => {
   const { signal, abort } = new AbortController();
   const response = appAxios
-    .get<[]>(URL.getRequestOrdersData(), {
+    .get<PaginatedResponse<Product>>(URL.getProductsData(), {
       signal,
       ...axiosRequestConfig,
     })
-    .then((response) => response.data);
+    .then((response) => response.data.results);
   return {
     response,
     abort,
   };
 };
+ 
 
 export const createProduct = (
   newOrder: INewOrderForm,

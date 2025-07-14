@@ -1,5 +1,5 @@
 export {
   createProduct,
-  getRequestOrdersData,
+  getProductsData,
   URL,
 } from "./products";
