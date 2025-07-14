@@ -1,5 +1,4 @@
 export interface INewProductForm {
-  id?: number;
   name: string;
   description: string;
   stock: number;
@@ -7,12 +6,17 @@ export interface INewProductForm {
   is_active:boolean;
 }
 
+export interface IEditProductForm extends INewProductForm {
+  id : number;
+}
+
+
 export interface Product {
   id: number;
   name: string;
   description: string;
   stock: number;
-  price: string;
+  price: number;
   is_active?:boolean;
 }
 

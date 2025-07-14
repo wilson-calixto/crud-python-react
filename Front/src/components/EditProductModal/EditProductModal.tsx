@@ -5,20 +5,16 @@ import { Content } from 'antd/es/layout/layout';
 import { yupResolver } from '@hookform/resolvers/yup';
 import useNewProductModalSchema from './useProductsSchema';
 import  { Modal as AntModal } from 'antd';
-import type { INewProductForm, Product } from '../../api/resources/products/IProduct';
+import type { IEditProductForm } from '../../api/resources/products/IProduct';
 
-
-
-export interface INewProductModalData extends INewProductForm {
-  description: string;
-}
+ 
 
 interface INewProductModalProps {
   isOpen: boolean;
-  onConfirm: (data: INewProductForm) => void;
+  onConfirm: (data: IEditProductForm) => void;
   onCancel: () => void;
   loading: boolean;
-  product?:Product;
+  product:IEditProductForm;
  }
 
 const EditProductModal: React.FC<INewProductModalProps> = ({
@@ -28,18 +24,17 @@ const EditProductModal: React.FC<INewProductModalProps> = ({
   loading,
   product
 }) => {
- console.log('product', product)
-  const {
+   const {
     control,
     handleSubmit,
     reset,
     formState: { errors: formErrors },
-  } = useForm<INewProductForm>({
+  } = useForm<IEditProductForm>({
     defaultValues: {
       name: product?.name||'',
       description: product?.description||'',
       stock: product?.stock||1,
-      price: product?.price ? parseFloat(product.price):1,
+      price: product?.price??1,
       is_active:product?.is_active||true,
     },
     resolver: yupResolver(useNewProductModalSchema()),
@@ -49,10 +44,9 @@ const EditProductModal: React.FC<INewProductModalProps> = ({
   });
 
  
-  const handleSub = async (data: INewProductForm) => {
+  const handleSub = async (data: IEditProductForm) => {
     try {
-
-      await onConfirm(data);
+      await onConfirm({id:product.id,...data});
     } catch (error) {
       console.log(error);
     }
