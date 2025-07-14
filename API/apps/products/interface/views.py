@@ -111,7 +111,7 @@ def update_product(request, pk):
 
 
 @csrf_protect
-@checar_plano_ativo
+# @checar_plano_ativo
 @api_view(['DELETE'])
 # @permission_classes([IsAuthenticated])
 def delete_product(request, pk):

@@ -6,6 +6,7 @@ export const URL = {
   getProductsData: () => `api/products`,
   createProduct: () => `api/products/create`,
   editProduct: (id:number) => `api/products/update/${id}/`,
+  deleteProduct: (id:number) => `api/products/delete/${id}/`,
 };
 
  
@@ -55,6 +56,27 @@ export const editProduct = (
 
   const response = appAxios
     .put<IProduct>(URL.editProduct(NewProduct.id), NewProduct, {
+      signal: axiosRequestConfig?.signal || signal,
+      ...axiosRequestConfig,
+    })
+    .then((response) => response.data);
+
+  return {
+    response,
+    abort,
+  };
+};
+
+
+
+export const deleteProduct = (
+  id: number,
+  axiosRequestConfig?: AxiosRequestConfig
+) => {
+   const { signal, abort } = new AbortController();
+
+  const response = appAxios
+    .delete(URL.deleteProduct(id),  {
       signal: axiosRequestConfig?.signal || signal,
       ...axiosRequestConfig,
     })

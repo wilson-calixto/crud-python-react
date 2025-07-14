@@ -18,7 +18,7 @@ interface INewProductModalProps {
  }
 
  
-const EditProductModal: React.FC<INewProductModalProps> = ({
+const DeleteProductModal: React.FC<INewProductModalProps> = ({
   onCancel,
   onConfirm,
   isOpen,
@@ -39,8 +39,7 @@ const EditProductModal: React.FC<INewProductModalProps> = ({
       price: product.price,
       is_active:product.is_active,
     },
-    resolver: yupResolver(useEditProductsSchema()),
-    reValidateMode: 'onChange',
+     reValidateMode: 'onChange',
     mode: 'all',
     shouldFocusError: false,
   });
@@ -173,4 +172,4 @@ const EditProductModal: React.FC<INewProductModalProps> = ({
   );
 };
 
-export default EditProductModal;
+export default DeleteProductModal;

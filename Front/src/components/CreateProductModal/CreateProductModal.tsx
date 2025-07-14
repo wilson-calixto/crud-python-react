@@ -34,11 +34,7 @@ const CreateProductModal: React.FC<INewProductModalProps> = ({
     formState: { errors: formErrors },
   } = useForm<INewProductForm>({
     defaultValues: {
-      name: 'Teclado Mecânico',
-      description: 'Teclado com switches azuis e RGB',
-      stock: 10,
-      price: 349.9,
-      is_active:true,
+        is_active:true,
     },
     resolver: yupResolver(useNewProductModalSchema()),
     reValidateMode: 'onChange',
@@ -55,10 +51,6 @@ const CreateProductModal: React.FC<INewProductModalProps> = ({
       console.log(error);
     }
   };
-
-  // const debouncedSearchPartNumber = debounce((value: string) => {
-  //   onChangePartNumber({ value });
-  // }, 500);
 
   return (
     <AntModal

@@ -1,10 +1,10 @@
-import { Table, Skeleton, Button, Row, Flex, notification } from 'antd';
+import { Table, Skeleton, Button, Row, Flex, notification, Modal } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import CreateProductModal from './components/CreateProductModal/CreateProductModal';
 import useProduct from './hooks/useProduct';
  import EditProductModal from './components/EditProductModal/EditProductModal';
 import type { IProduct } from './api/resources/products/IProduct';
-
+ 
 
 
 
@@ -22,7 +22,11 @@ function Products() {
     isLoadingCreateProduct,
     isLoadingProductsTable,
     dataAllProductsTable,   
-    showEditOrderModal 
+    showEditOrderModal,
+    showDeleteOrderModal,
+    openDeleteProduct,
+    handleOk,
+    handleCancel
     } = useProduct(api);
 
 
@@ -58,16 +62,21 @@ const columns: ColumnsType<IProduct> = [
     title: 'Ações',
     dataIndex: '',
     key: 'x',   
-    render: (row) => <><a onClick={() =>
-       showEditOrderModal(row)}>Edit</a>
+    render: (row) => <>
+      <a onClick={() => showEditOrderModal(row)}>Edit</a>
        <div></div>
-       {/* <a onClick={() =>
-       showEditOrderModal(row)}>Delete</a> */}
+     <a onClick={() =>showDeleteOrderModal(row)}>Delete</a>
        
        
        </>,
   },
 ];
+
+
+
+
+
+
 
   if (isLoadingProductsTable) return <Skeleton active />;
 
@@ -75,6 +84,21 @@ const columns: ColumnsType<IProduct> = [
   return (
     <div style={{ padding: 24, marginTop: '50px' }}>
       {contextHolder}
+
+
+    {selectedProduct &&
+ 
+
+       <Modal
+        title="Deletar"
+        open={openDeleteProduct}
+        onOk={()=>handleOk(selectedProduct)}
+        confirmLoading={false}
+        onCancel={handleCancel}
+      >
+        <p>{'Deseja deletar esse registro?'}</p>
+      </Modal>
+    }
 
     {selectedProduct &&
       <EditProductModal
