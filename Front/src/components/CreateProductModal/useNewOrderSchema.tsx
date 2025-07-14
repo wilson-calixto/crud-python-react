@@ -13,6 +13,7 @@ const useNewOrderSchema = () => {
       .number()
       .min(0.01, 'valor mínino do campo')
       .required("campo obrigatório"),
+    is_active: yup.boolean().required(),
   });
 };
 

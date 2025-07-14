@@ -67,7 +67,6 @@ const CreateProductModal: React.FC<INewOrderModalProps> = ({
       onCancel={onCancel}
       open={isOpen}
       centered
-      destroyOnClose
       afterClose={() => {
         reset();
       }}
