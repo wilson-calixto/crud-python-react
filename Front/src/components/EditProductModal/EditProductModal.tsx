@@ -3,18 +3,18 @@ import { Controller, useForm } from 'react-hook-form';
 import { CustomFormItem } from './styles';
 import { Content } from 'antd/es/layout/layout';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useNewProductModalSchema from './useProductsSchema';
 import  { Modal as AntModal } from 'antd';
-import type { IEditProductForm } from '../../api/resources/products/IProduct';
-
+import type { IProduct } from '../../api/resources/products/IProduct';
+import useEditProductsSchema from './useEditProductsSchema';
+ 
  
 
 interface INewProductModalProps {
   isOpen: boolean;
-  onConfirm: (data: IEditProductForm) => void;
+  onConfirm: (data: IProduct) => void;
   onCancel: () => void;
   loading: boolean;
-  product:IEditProductForm;
+  product:IProduct;
  }
 
 const EditProductModal: React.FC<INewProductModalProps> = ({
@@ -29,24 +29,25 @@ const EditProductModal: React.FC<INewProductModalProps> = ({
     handleSubmit,
     reset,
     formState: { errors: formErrors },
-  } = useForm<IEditProductForm>({
+  } = useForm<IProduct>({
     defaultValues: {
-      name: product?.name||'',
-      description: product?.description||'',
-      stock: product?.stock||1,
-      price: product?.price??1,
-      is_active:product?.is_active||true,
+      id:product.id,
+      name: product.name,
+      description: product.description,
+      stock: product.stock,
+      price: product.price,
+      is_active:product.is_active,
     },
-    resolver: yupResolver(useNewProductModalSchema()),
+    resolver: yupResolver(useEditProductsSchema()),
     reValidateMode: 'onChange',
     mode: 'all',
     shouldFocusError: false,
   });
 
  
-  const handleSub = async (data: IEditProductForm) => {
+  const handleSub = async (data: IProduct) => {
     try {
-      await onConfirm({id:product.id,...data});
+      await onConfirm(data);
     } catch (error) {
       console.log(error);
     }

@@ -1,8 +1,12 @@
 import * as yup from 'yup';
 
-const useProductsSchema = () => {
+const useEditProductsSchema = () => {
  
   return yup.object({
+     id: yup
+      .number()
+      .min(1, 'valor mínino do campo')
+      .required("campo obrigatório"),
     name: yup.string().required("campo obrigatório"),
     description: yup.string().required("campo obrigatório"),
     stock: yup
@@ -18,4 +22,4 @@ const useProductsSchema = () => {
 };
 
 
-export default useProductsSchema;
+export default useEditProductsSchema;

@@ -2,8 +2,8 @@ import { Table, Skeleton, Button, Row, Flex, notification } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import CreateProductModal from './components/CreateProductModal/CreateProductModal';
 import useProduct from './hooks/useProduct';
-import type { Product } from './api/resources/products/IProduct';
-import EditProductModal from './components/EditProductModal/EditProductModal';
+ import EditProductModal from './components/EditProductModal/EditProductModal';
+import type { IProduct } from './api/resources/products/IProduct';
 
 
 
@@ -28,7 +28,7 @@ function Products() {
 
 
 
-const columns: ColumnsType<Product> = [
+const columns: ColumnsType<IProduct> = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -58,8 +58,14 @@ const columns: ColumnsType<Product> = [
     title: 'Ações',
     dataIndex: '',
     key: 'x',   
-    render: (row) => <a onClick={() =>
-       showEditOrderModal(row)}>Edit</a>,
+    render: (row) => <><a onClick={() =>
+       showEditOrderModal(row)}>Edit</a>
+       <div></div>
+       {/* <a onClick={() =>
+       showEditOrderModal(row)}>Delete</a> */}
+       
+       
+       </>,
   },
 ];
 

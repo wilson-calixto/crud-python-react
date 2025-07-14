@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { API } from "../api";
 
-import type { IEditProductForm, INewProductForm, Product } from "../api/resources/products/IProduct";
+import type { IProduct, INewProductForm } from "../api/resources/products/IProduct";
 import type { NotificationInstance } from "antd/es/notification/interface";
  
 const useProduct = (api:NotificationInstance) => {
@@ -11,10 +11,10 @@ const useProduct = (api:NotificationInstance) => {
  
 
   const [openEditProduct, setOpenEditProduct] = useState<boolean>(false);
-  const [selectedProduct, setSelectedProduct] = useState<IEditProductForm|undefined>();
+  const [selectedProduct, setSelectedProduct] = useState<IProduct|undefined>();
 
 
-const showEditOrderModal = (row: IEditProductForm) => {
+const showEditOrderModal = (row: IProduct) => {
      setOpenEditProduct(true);
     setSelectedProduct(row);
 };
@@ -46,7 +46,7 @@ const showEditOrderModal = (row: IEditProductForm) => {
 
   const { mutateAsync: editProduct } =
     useMutation({
-      mutationFn: (NewProduct: IEditProductForm) =>
+      mutationFn: (NewProduct: IProduct) =>
         API.Products.editProduct(NewProduct).response,
       onError() {
         api['error']({
@@ -73,7 +73,7 @@ const showEditOrderModal = (row: IEditProductForm) => {
     setOpenCreateNewProduct(true);
   };
 
-    const confirmEditProduct = async (data: IEditProductForm) => {
+    const confirmEditProduct = async (data: IProduct) => {
     try {
        await editProduct(data);
         api['success']({
