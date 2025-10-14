@@ -73,6 +73,15 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+        'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '10/minute',    # 10 requisições por minuto (usuário não autenticado)
+        'user': '1000/day',     # 1000 requisições por dia (usuário autenticado)
+        'products': '5/minute',  # 5 requisições por minuto para o endpoint products
+    }
 }
 
 CORS_ALLOWED_ORIGINS = [
