@@ -1,0 +1,18 @@
+
+
+
+
+source /home/wil/projects/crud-python-react/API/venv/bin/activate
+
+python manage.py runserver
+
+popular banco
+
+cd /home/wil/projects/crud-python-react/API && source venv/bin/activate && python manage.py clear_products && python manage.py seed_products --products 20 --categories 3 --suppliers 3 --tags 7 --batch 50
+
+
+seed: python manage.py seed_products --products 10000 --categories 50 --suppliers 50 --tags 1000 --batch 1000
+
+
+limpar banco: 
+python manage.py clear_products

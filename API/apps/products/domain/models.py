@@ -54,6 +54,8 @@ class Product(models.Model):
     # is_ready = models.BooleanField(default=True)
     category = models.ForeignKey('Category', on_delete=models.PROTECT, default=1)
     supplier = models.ForeignKey('Supplier', on_delete=models.PROTECT, default=1)
+    # Many-to-many tags allow richer filtering and efficient prefetching on lists
+    tags = models.ManyToManyField('Tag', related_name='products', blank=True)
     history = HistoricalRecords()
 
     def delete(self, *args, **kwargs):
@@ -63,4 +65,21 @@ class Product(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    # Campos de auditoria
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = "tags"
+        ordering = ["name"]
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
+
+    def __str__(self):
+        return self.name
 

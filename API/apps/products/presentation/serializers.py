@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.products.domain.models import Product, Category, Supplier
+from apps.products.domain.models import Product, Category, Supplier, Tag
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -46,8 +46,16 @@ class SupplierSerializer(serializers.ModelSerializer):
         return value
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ["id", "name"]
+        read_only_fields = ["id", "created_at", "updated_at"]
+
+
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    tags = TagSerializer(read_only=True, many=True)
 
     class Meta:
         model = Product

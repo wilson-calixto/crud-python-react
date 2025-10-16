@@ -36,11 +36,18 @@ from rest_framework.decorators import api_view, permission_classes, throttle_cla
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def list_products(request):
+   
+    
+    # categories=Product.objects.all()
+    # serializer = ProductSerializer(categories, many=True)
+    # return Response(serializer.data)
+
+ 
     queryset = (
         Product.objects
-        .filter(is_active=True)
-        .select_related('category', 'supplier')     # FK ou OneToOne or OneToMany Faz o join mais importante primeiro 
-        .prefetch_related('tags')         # ManyToMany ou reverse FK   faz o 
+        .filter(is_active=True)        
+        .select_related('category', 'supplier')     # FK ou OneToOne or OneToMany Faz o join mais importante primeiro        
+        .prefetch_related('tags')
     )
     filterset = ProductFilter(request.GET, queryset=queryset)
     paginator = PageNumberPagination()
@@ -48,7 +55,10 @@ def list_products(request):
     result_page = paginator.paginate_queryset(filterset.qs, request)
     serializer = ProductSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
+    
  
+ 
+
 @extend_schema(
     request=ProductSerializer,
     responses={201: ProductSerializer},
