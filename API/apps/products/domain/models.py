@@ -4,9 +4,19 @@ from simple_history.models import HistoricalRecords
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    id = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=100, unique=True)
+    # Campos de auditoria
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    class Meta:
+        db_table = "categories"
+        ordering = ["name"]
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
 
+    def __str__(self):
+        return self.name
 class Supplier(models.Model):
     """
     Representa um fornecedor de produtos no sistema.

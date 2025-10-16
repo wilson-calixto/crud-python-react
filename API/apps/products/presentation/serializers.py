@@ -4,8 +4,18 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'name']
+        read_only_fields = ["id", "created_at", "updated_at"]
 
-from rest_framework import serializers
+    # def validate_name(self,value):
+    #     qs = Category.objects.filter(name_iexact=value)
+    #     if self.instance:
+    #         qs = qs.exclude(pk=self.instance.pk)
+    #     if self.exists():
+    #         raise serializers.ValidationError('já exixte essa categoria')
+    #     return value
+    
+
+
  
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:

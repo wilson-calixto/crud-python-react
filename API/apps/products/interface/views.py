@@ -8,12 +8,14 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from apps.products.domain.models import Product, Category
-from apps.products.presentation.serializers import ProductSerializer,CategorySerializer
+from apps.products.domain.models import Product, Category,Supplier
+from apps.products.presentation.serializers import ProductSerializer,CategorySerializer,SupplierSerializer
 from apps.products.presentation.decorators import checar_plano_ativo
 from apps.products.infrastructure.filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.throttling import ScopedRateThrottle
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 
  
 @extend_schema(
@@ -127,6 +129,7 @@ def delete_product(request, pk):
 
 
 @api_view(['POST'])
+@throttle_classes([ScopedRateThrottle])  # respeita throttling configurado
 def create_category(request):
     serializer = CategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -146,11 +149,36 @@ def list_category(request):
  
 
 
+@api_view(['POST'])
+@throttle_classes([ScopedRateThrottle])  # respeita throttling configurado
+def create_supplier(request):
+    serializer = SupplierSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_protect
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def list_supplier(request):
+    categories=Supplier.objects.all()
+    serializer = SupplierSerializer(categories, many=True)
+    return Response(serializer.data)
+
+ 
+
+
+
 urlpatterns = [
     path('products/category/', list_category),
     path('products/category/create/', create_category),
     path('products/', list_products),
     path('products/create', create_product),
+    path('products/supliers/', list_supplier),
+    path('products/supliers/create', create_supplier),    
+
+
     path('products/<int:pk>/', retrieve_product),
     path('products/update/<int:pk>/', update_product),
     path('products/delete/<int:pk>/', delete_product),
