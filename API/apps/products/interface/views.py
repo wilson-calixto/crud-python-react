@@ -39,8 +39,8 @@ def list_products(request):
     queryset = (
         Product.objects
         .filter(is_active=True)
-        .select_related('category', 'supplier')     # FK ou OneToOne
-        .prefetch_related('tags', 'images')         # M2M ou reverse FK
+        .select_related('category', 'supplier')     # FK ou OneToOne or OneToMany Faz o join mais importante primeiro 
+        .prefetch_related('tags')         # ManyToMany ou reverse FK   faz o 
     )
     filterset = ProductFilter(request.GET, queryset=queryset)
     paginator = PageNumberPagination()

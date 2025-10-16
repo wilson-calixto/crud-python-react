@@ -52,7 +52,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # is_ready = models.BooleanField(default=True)
-    category = models.ForeignKey('Category', on_delete=models.PROTECT, default='test')
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, default=1)
     supplier = models.ForeignKey('Supplier', on_delete=models.PROTECT, default=1)
     history = HistoricalRecords()
 
