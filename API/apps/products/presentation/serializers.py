@@ -1,7 +1,44 @@
 from rest_framework import serializers
-from apps.products.domain.models import Product
+from apps.products.domain.models import Product, Category, Supplier
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+from rest_framework import serializers
+ 
+class SupplierSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Supplier
+        fields = [
+            "id",
+            "name",
+            "contact_name",
+            "email",
+            "phone",
+            "address",
+            "website",
+            "is_active",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "created_at", "updated_at"]
+
+    def validate_name(self, value):
+        """
+        Valida se o nome do fornecedor já existe (case insensitive).
+        """
+        qs = Supplier.objects.filter(name__iexact=value)
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise serializers.ValidationError("Já existe um fornecedor com esse nome.")
+        return value
+
 
 class ProductSerializer(serializers.ModelSerializer):
+    category = CategorySerializer(read_only=True)
+
     class Meta:
         model = Product
         fields = '__all__'

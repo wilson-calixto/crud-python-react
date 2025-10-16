@@ -8,8 +8,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from apps.products.domain.models import Product
-from apps.products.presentation.serializers import ProductSerializer
+from apps.products.domain.models import Product, Category
+from apps.products.presentation.serializers import ProductSerializer,CategorySerializer
 from apps.products.presentation.decorators import checar_plano_ativo
 from apps.products.infrastructure.filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -34,7 +34,12 @@ from rest_framework.pagination import PageNumberPagination
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def list_products(request):
-    queryset = Product.objects.filter(is_active=True)
+    queryset = (
+        Product.objects
+        .filter(is_active=True)
+        .select_related('category', 'supplier')     # FK ou OneToOne
+        .prefetch_related('tags', 'images')         # M2M ou reverse FK
+    )
     filterset = ProductFilter(request.GET, queryset=queryset)
     paginator = PageNumberPagination()
     paginator.page_size = request.GET.get('page_size', 10)
@@ -121,7 +126,29 @@ def delete_product(request, pk):
 
 
 
+@api_view(['POST'])
+def create_category(request):
+    serializer = CategorySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_protect
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def list_category(request):
+    categories=Category.objects.all()
+    serializer = CategorySerializer(categories, many=True)
+    return Response(serializer.data)
+
+ 
+
+
 urlpatterns = [
+    path('products/category/', list_category),
+    path('products/category/create/', create_category),
     path('products/', list_products),
     path('products/create', create_product),
     path('products/<int:pk>/', retrieve_product),
